@@ -5,26 +5,21 @@
 /* Funcao que retorna verdadeiro se
  * `num' nao contem algarismos repetidos
  * e zero caso contrario. */
-char eh_sem_repeticao(int *num, int n)
-{
-    int i, j;
+char eh_sem_repeticao(int *num, int n) {
+    int i, j ;
 
-    for (i = 0; i < n; i++)
-    {
-        for (j = 0; j < n && i != j; j++)
-        {
-            if (num[i] == num[j])
-            {
+    for(i=0; i < n; i++) {
+        for(j=0; j < n && i != j; j++) {
+            if(num[i] == num[j]) {
                 return 0;
             }
         }
     }
 
-    return 1;
+    return 1 ;
 }
 
-int main()
-{
+int main() {
     printf("TP 02\n");
     printf("Digite o numero do arquivo de entrada: ");
     char numeroArquivoDeEntrada[5];
@@ -34,9 +29,8 @@ int main()
     strcat(nomeArquivoDeEntrada, numeroArquivoDeEntrada);
     strcat(nomeArquivoDeEntrada, extensaoArquivo);
 
-    FILE *arquivoDeEntrada;
-    if ((arquivoDeEntrada = fopen(nomeArquivoDeEntrada, "r")) == NULL)
-    {
+    FILE * arquivoDeEntrada;
+    if ((arquivoDeEntrada = fopen (nomeArquivoDeEntrada, "r")) == NULL){
         printf("Arquivo nao encontrado!");
         return -1;
     }
@@ -44,36 +38,34 @@ int main()
     int quantidadeCidade;
     int capacidadeCaminhao;
 
-    fscanf(arquivoDeEntrada, "%d", &quantidadeCidade);
-    fscanf(arquivoDeEntrada, "%d", &capacidadeCaminhao);
+    fscanf (arquivoDeEntrada, "%d", &quantidadeCidade);
+    fscanf (arquivoDeEntrada, "%d", &capacidadeCaminhao);
 
     int demandaCidades[quantidadeCidade];
     int somatorioDemandaCidades = 0;
-    for (int i = 0; i < quantidadeCidade; i++)
-    {
-        fscanf(arquivoDeEntrada, "%d", &demandaCidades[i]);
+    for(int i = 0; i < quantidadeCidade; i++){
+        fscanf (arquivoDeEntrada, "%d", &demandaCidades[i]);
         somatorioDemandaCidades += demandaCidades[i];
     }
 
     int cidades[quantidadeCidade - 1];
-    for (int i = 0; i < quantidadeCidade - 1; i++)
-    {
-        cidades[i] = i + 1;
+    for(int i = 0; i < quantidadeCidade -1; i++) {
+        cidades[i] = i+1;
     }
 
     int quantidadeCaminhao = somatorioDemandaCidades / capacidadeCaminhao;
 
     int distanciaEntreCidades[quantidadeCidade][quantidadeCidade];
-    for (int i = 0; i < quantidadeCidade * quantidadeCidade; i++)
-    {
+    for(int i = 0; i < quantidadeCidade * quantidadeCidade; i++){
         int posI, posJ, val;
-        fscanf(arquivoDeEntrada, "%d %d %d", &posI, &posJ, &val);
+        fscanf (arquivoDeEntrada, "%d %d %d", &posI, &posJ, &val);
         distanciaEntreCidades[posI][posJ] = val;
     }
 
-    int *cidadesPermutadas;      /* cidades que representara cada permutacao. */
+
+    int *cidadesPermutadas; /* cidades que representara cada permutacao. */
     int quantidadeCidadePermuta; /* quantidade de elementos do cidades. */
-    int iPermuta, jPermuta;      /* controle de loop. */
+    int iPermuta, jPermuta; /* controle de loop. */
 
     // Desconsiderar a cidade 0, pois ela é o deposito
     quantidadeCidadePermuta = quantidadeCidade - 1;
@@ -81,29 +73,24 @@ int main()
     /*
      * Aloca um vetor para representar as cidades permutadas
      */
-    cidadesPermutadas = (int *)calloc(quantidadeCidadePermuta, sizeof(int));
-    if (cidadesPermutadas == NULL)
-    {
-        perror("malloc");
+    cidadesPermutadas = (int *)calloc(quantidadeCidadePermuta, sizeof(int)) ;
+    if (cidadesPermutadas == NULL ) {
+        perror("malloc") ;
         return -1;
     }
 
     /* Inicio do algoritmo. */
-    while (cidadesPermutadas[quantidadeCidadePermuta] == 0)
-    {
-        for (iPermuta = 0; iPermuta < quantidadeCidadePermuta; iPermuta++)
-        {
+    while (cidadesPermutadas[quantidadeCidadePermuta] == 0 ) {
+        for(iPermuta=0; iPermuta < quantidadeCidadePermuta; iPermuta++) {
             /* Mostra a permutacao na tela se
              * e somente se `cidadesPermutadas' nao contem
              * algarismos repetidos. */
-            if (eh_sem_repeticao(cidadesPermutadas, quantidadeCidadePermuta))
-            {
+            if ( eh_sem_repeticao(cidadesPermutadas, quantidadeCidadePermuta) ) {
                 int distanciaPercorrida = 0;
                 int cidadeAnterior = 0;
                 /*printf("(C[0] D[0] T[0]) ");*/
                 printf("0 ");
-                for (jPermuta = 0; jPermuta < quantidadeCidadePermuta; jPermuta++)
-                {
+                for(jPermuta=0; jPermuta < quantidadeCidadePermuta; jPermuta++) {
                     distanciaPercorrida += distanciaEntreCidades[cidadeAnterior][cidades[cidadesPermutadas[jPermuta]]];
 
                     /*printf("(C[%d] D[%d] T[%d]) ",
@@ -123,38 +110,37 @@ int main()
 
             /* incrementa o algarismo menos
              * significativo. */
-            cidadesPermutadas[0]++;
+            cidadesPermutadas[0]++ ;
         }
 
         /* distribui os vai-uns. */
-        for (iPermuta = 0; iPermuta < quantidadeCidadePermuta; iPermuta++)
-        {
-            if (cidadesPermutadas[iPermuta] == quantidadeCidadePermuta)
-            {
+        for(iPermuta=0; iPermuta < quantidadeCidadePermuta; iPermuta++) {
+            if(cidadesPermutadas[iPermuta] == quantidadeCidadePermuta) {
                 cidadesPermutadas[iPermuta] = 0;
-                cidadesPermutadas[iPermuta + 1]++;
+                cidadesPermutadas[iPermuta + 1]++ ;
             }
         }
     }
 
-    free(cidadesPermutadas);
+    free(cidadesPermutadas) ;
+
+
 
     // Print Arquivo
     printf("\n\n\nInformacoes obtidas do arquivo:\n");
     printf("\tQuantidade Cidades: %d\n", quantidadeCidade);
     printf("\n\tVetor de Cidades:\n\t\t");
-    for (int i = 0; i < quantidadeCidade - 1; i++)
+    for(int i = 0; i < quantidadeCidade - 1; i++)
         printf("%d ", cidades[i]);
     printf("\n\tCapacidade de cada caminhao: %d\n", capacidadeCaminhao);
     printf("\tQuantidade de Caminhao: %d", quantidadeCaminhao);
     printf("\tDemanda das Cidades: ");
-    for (int i = 0; i < quantidadeCidade; i++)
+    for(int i = 0; i < quantidadeCidade; i++)
         printf("%d ", demandaCidades[i]);
     printf("\n\tMatriz de distancia entre as cidades:");
-    for (int i = 0; i < quantidadeCidade; i++)
-    {
+    for(int i = 0; i < quantidadeCidade; i++){
         printf("\n\t\t");
-        for (int j = 0; j < quantidadeCidade; j++)
+        for(int j = 0; j < quantidadeCidade; j++)
             printf("%-3d ", distanciaEntreCidades[i][j]);
     }
 
